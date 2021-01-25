@@ -41,3 +41,22 @@ IJ_PLUGINS_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/.local/share/JetBrains/$IJ_ROOT_DIRNAME
 
 IJ_LOG_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/.cache/JetBrains/${IJ_ROOT_DIRNAME}/log
 
+#############################################################
+# If you want to share code with the container,
+# place your project directories under $IJ_PROJECTS_DIR_HOST
+#############################################################
+IJ_PROJECTS_DIR_HOST=${IJ_ROOT_DIR_HOST}/IdeaProjects
+IJ_PROJECTS_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/IdeaProjects
+
+#-v $ECLIPSE_WORKSPACE_DIR:$DOCKER_ECLIPSE_WORKSPACE_DIR \
+#-v $MAVEN_DIR:$MAVEN_DIR \
+#-w $DOCKER_ECLIPSE_WORKSPACE_DIR
+
+docker container run -d --rm \
+-e DISPLAY \
+-v /tmp/.X11-unix:/tmp/.X11-unix \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v $HOME/.Xauthority:/home/$USER/.Xauthority \
+-h intelliJ-ce-ide-jdk11 \
+--name  intelliJ-ce-ide-jdk11 \
+ij:latest
