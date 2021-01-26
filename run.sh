@@ -48,15 +48,27 @@ IJ_LOG_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/.cache/JetBrains/${IJ_ROOT_DIRNAME}/log
 IJ_PROJECTS_DIR_HOST=${IJ_ROOT_DIR_HOST}/IdeaProjects
 IJ_PROJECTS_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/IdeaProjects
 
-#-v $ECLIPSE_WORKSPACE_DIR:$DOCKER_ECLIPSE_WORKSPACE_DIR \
-#-v $MAVEN_DIR:$MAVEN_DIR \
-#-w $DOCKER_ECLIPSE_WORKSPACE_DIR
+###########################################################
+# Share you maven artiacts on hosts machine with container
+# to avoid re-downloading everything
+###########################################################
+MAVEN_M2_DIR_HOST=~/.m2
+MAVEN_M2_DIR_CNTR=~/.m2
 
-docker container run -d --rm \
--e DISPLAY \
--v /tmp/.X11-unix:/tmp/.X11-unix \
--v /var/run/docker.sock:/var/run/docker.sock \
--v $HOME/.Xauthority:/home/$USER/.Xauthority \
--h intelliJ-ce-ide-jdk11 \
---name  intelliJ-ce-ide-jdk11 \
+
+
+docker container run -d --rm                       \
+-e DISPLAY                                         \
+-v $HOME/.Xauthority:/home/$USER/.Xauthority       \
+-v /tmp/.X11-unix:/tmp/.X11-unix                   \
+-v /var/run/docker.sock:/var/run/docker.sock       \
+-v ${IJ_ROOT_DIR_HOST}:${IJ_SYNTAX_DIR_CNTR}       \
+-v ${IJ_CACHE_DIR_HOST}:${IJ_CACHE_DIR_CNTR}       \
+-v ${IJ_PLUGINS_DIR_HOST}:${IJ_PLUGINS_DIR_CNTR}   \
+-v ${IJ_LOG_DIR_HOST}:${IJ_LOG_DIR_CNTR}           \
+-v ${IJ_PROJECTS_DIR_HOST}:${IJ_PROJECTS_DIR_CNTR} \
+-v ${MAVEN_M2_DIR_HOST}:${MAVEN_M2_DIR_CNTR}       \
+-h jetbrains                                       \
+--name  intelliJ-ce-ide-jdk11                      \
+-exec -it \
 ij:latest
