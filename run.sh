@@ -24,7 +24,7 @@ IJ_PLUGINS_DIR_HOST=${IJ_ROOT_DIR_HOST}/.local/share/JetBrains/consentOptions
 [ ! -d $IJ_PLUGINS_DIR_HOST ] && mkdir -p $IJ_PLUGINS_DIR_HOST
 
 # IJ log directory
-IJ_LOG_DIR_HOST=${IJ_ROOT_DIR_HOST}/.cache/JetBrains/${IJ_ROOT_DIR_HOST}/log
+IJ_LOG_DIR_HOST=${IJ_ROOT_DIR_HOST}/.cache/JetBrains/${IJ_ROOT_DIRNAME}/log
 [ ! -d $IJ_LOG_DIR_HOST ] && mkdir -p $IJ_LOG_DIR_HOST
 
 # IJ User Preferences
@@ -74,7 +74,6 @@ chmod 764 -R $IJ_ROOT_DIR_HOST
 # to connect for Docker to connect to X11 Server on host
 #########################################################
 xhost +
-
 
 docker container run -d --rm -it                   \
 -e DISPLAY                                         \

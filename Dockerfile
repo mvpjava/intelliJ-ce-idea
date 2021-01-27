@@ -70,7 +70,7 @@ RUN mkdir -p ${HOME}/.config/JetBrains/IdeaIC2020.3 &&     \
     mkdir -p ${HOME}/.local/share/JetBrains/consentOptions &&   \
     mkdir -p ${HOME}/.java/.userPrefs && \
     chown -R ${USER}:${USER} ${HOME} &&  \
-    chmod 2777 -R ${HOME}
+    chmod 2764 -R ${HOME}
 
 ###############################################################
 # Removes accessibility warning (known bug) in console log 
@@ -81,5 +81,4 @@ ENV NO_AT_BRIDGE=1
 USER ${USER}
 WORKDIR ${HOME}
 
-#ENTRYPOINT ["/opt/idea-IC-203.6682.168/bin/idea.sh"]
 ENTRYPOINT  ["sh", "-c", "${IJ_SETUP_SCRIPT_DIR_CNTR}/idea.sh"]
