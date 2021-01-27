@@ -46,6 +46,8 @@ IJ_LOG_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/.cache/JetBrains/${IJ_ROOT_DIRNAME}/log
 # place your project directories under $IJ_PROJECTS_DIR_HOST
 #############################################################
 IJ_PROJECTS_DIR_HOST=${IJ_ROOT_DIR_HOST}/IdeaProjects
+[ ! -d $IJ_PROJECTS_DIR_HOST ] && mkdir -p $IJ_PROJECTS_DIR_HOST
+
 IJ_PROJECTS_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/IdeaProjects
 
 ###########################################################
@@ -53,11 +55,25 @@ IJ_PROJECTS_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/IdeaProjects
 # to avoid re-downloading everything
 ###########################################################
 MAVEN_M2_DIR_HOST=~/.m2
+[ ! -d $ $MAVEN_M2_DIR_HOST ] && mkdir -p $MAVEN_M2_DIR_HOST
+
 MAVEN_M2_DIR_CNTR=~/.m2
 
 
+# Ensure host user has all persmissions correty set for access
+chmod 777 -R IJ_ROOT_DIR_HOST
 
-docker container run -d --rm                       \
+#########################################################
+# Ensure the Xauthority file exists and allows permission
+# to connect for Docker to connect to X11 Server on host
+#########################################################
+xhost +
+
+
+# --user 1000:1000 \
+# -w ${HOME} \
+
+docker container run -d --rm -it                   \
 -e DISPLAY                                         \
 -v $HOME/.Xauthority:/home/$USER/.Xauthority       \
 -v /tmp/.X11-unix:/tmp/.X11-unix                   \
@@ -70,5 +86,4 @@ docker container run -d --rm                       \
 -v ${MAVEN_M2_DIR_HOST}:${MAVEN_M2_DIR_CNTR}       \
 -h jetbrains                                       \
 --name  intelliJ-ce-ide-jdk11                      \
--exec -it \
 ij:latest

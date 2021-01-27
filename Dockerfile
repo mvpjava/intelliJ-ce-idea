@@ -45,21 +45,29 @@ RUN  cd ${IJ_INSTALL_DIR}   \
   && rm -f ${IJ_TARBALL}
 
 # Switch to non-root user which gets created with sudo access
-#ENV USER=mvpjava
-#ENV HOME=/home/${USER}
-#ENV USER_ID=1000
-#ENV GROUP_ID=1000
+ENV USER=andy
+ENV HOME=/home/${USER}
+ENV USER_ID=1000
+ENV GROUP_ID=1000
 
-#RUN useradd ${USER} && \
-#    export uid=${USER_ID} gid=${GROUP_ID} && \
-#    mkdir -p /etc/sudoers.d && \
-#    echo "${USER}:x:${USER_ID}:${GROUP_ID}:${USER},,,:${HOME}:/bin/bash" >> /etc/passwd && \
-#    echo "${USER}:x:${USER_ID}:" >> /etc/group && \
-#    echo "${USER} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USER} && \
-#    chmod 0440 /etc/sudoers.d/${USER} 
+RUN apt-get install sudo -y && \
+    useradd ${USER} && \
+    export uid=${USER_ID} gid=${GROUP_ID} && \
+    mkdir -p /etc/sudoers.d && \
+    echo "${USER}:x:${USER_ID}:${GROUP_ID}:${USER},,,:${HOME}:/bin/bash" >> /etc/passwd && \
+    echo "${USER}:x:${USER_ID}:" >> /etc/group && \
+    echo "${USER} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USER} && \
+    chmod 0440 /etc/sudoers.d/${USER} 
 
-#USER ${USER}
-#WORKDIR ${HOME}
 
-#CMD ${IJ_SETUP_SCRIPT_DIR_CNTR}/idea.sh
-CMD /usr/local/bin/bash
+USER ${USER}
+WORKDIR ${HOME}
+RUN sudo chown -R ${USER}:${USER} ${HOME} && sudo chmod 2777 -R ${HOME} && ls -al ${HOME}
+
+
+# Removes accessibility warning (known bug) in console log which is annoying to see
+# as a developer when started manually
+ENV NO_AT_BRIDGE=1
+
+#CMD ["/opt/idea-IC-203.6682.168/bin/idea.sh"]
+CMD sh
