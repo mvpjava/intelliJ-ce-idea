@@ -36,7 +36,7 @@ ENV PATH=${M2_HOME}/bin:${PATH}
 ARG IJ_TARBALL=ideaIC-2020.3.1.tar.gz
 ARG IJ_VERSION=IntelliJIdea2020.3
 ARG IJ_INSTALL_DIR=/opt
-ARG IJ_SETUP_SCRIPT_DIR_CNTR=${IJ_INSTALL_DIR}/idea-IC-203.6682.168/bin
+ENV IJ_SETUP_SCRIPT_DIR_CNTR=${IJ_INSTALL_DIR}/idea-IC-203.6682.168/bin
 
 COPY ${IJ_TARBALL} $IJ_INSTALL_DIR 
 
@@ -59,15 +59,27 @@ RUN apt-get install sudo -y && \
     echo "${USER} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USER} && \
     chmod 0440 /etc/sudoers.d/${USER} 
 
+##########################################################################
+# Need to create IJ directories here and then set persmissions for end
+# user or else when bind mounting, they will always be owned by root
+##########################################################################
+
+RUN mkdir -p ${HOME}/.config/JetBrains/IdeaIC2020.3 &&     \
+    mkdir -p ${HOME}/.cache/JetBrains/IdeaIC2020.3/log &&  \
+    mkdir -p ${HOME}/.local/share/JetBrains/IdeaIC2020.3 &&   \
+    mkdir -p ${HOME}/.local/share/JetBrains/consentOptions &&   \
+    mkdir -p ${HOME}/.java/.userPrefs && \
+    chown -R ${USER}:${USER} ${HOME} &&  \
+    chmod 2777 -R ${HOME}
+
+###############################################################
+# Removes accessibility warning (known bug) in console log 
+# which is annoying to see as a developer when started manually
+###############################################################
+ENV NO_AT_BRIDGE=1
 
 USER ${USER}
 WORKDIR ${HOME}
-RUN sudo chown -R ${USER}:${USER} ${HOME} && sudo chmod 2777 -R ${HOME} && ls -al ${HOME}
 
-
-# Removes accessibility warning (known bug) in console log which is annoying to see
-# as a developer when started manually
-ENV NO_AT_BRIDGE=1
-
-#CMD ["/opt/idea-IC-203.6682.168/bin/idea.sh"]
-CMD sh
+#ENTRYPOINT ["/opt/idea-IC-203.6682.168/bin/idea.sh"]
+ENTRYPOINT  ["sh", "-c", "${IJ_SETUP_SCRIPT_DIR_CNTR}/idea.sh"]

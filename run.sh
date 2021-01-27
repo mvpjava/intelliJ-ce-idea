@@ -5,7 +5,7 @@
 # in order to have write permissions in container (or else root is used)
 # Resource reference: https://www.jetbrains.com/help/idea/tuning-the-ide.html
 
-IJ_ROOT_DIRNAME=IntelliJIdea2020.3
+IJ_ROOT_DIRNAME=IdeaIC2020.3 
 IJ_ROOT_DIR_HOST=${HOME}/${IJ_ROOT_DIRNAME}
 [ ! -d $IJ_ROOT_DIR_HOST ] && mkdir -p $IJ_ROOT_DIR_HOST
 
@@ -20,12 +20,17 @@ IJ_CACHE_DIR_HOST=${IJ_ROOT_DIR_HOST}/.cache/JetBrains/
 [ ! -d $IJ_CACHE_DIR_HOST ] && mkdir -p $IJ_CACHE_DIR_HOST
 
 # IJ plugins directory
-IJ_PLUGINS_DIR_HOST=${IJ_ROOT_DIR_HOST}/.local/share/JetBrains/
+IJ_PLUGINS_DIR_HOST=${IJ_ROOT_DIR_HOST}/.local/share/JetBrains/consentOptions
 [ ! -d $IJ_PLUGINS_DIR_HOST ] && mkdir -p $IJ_PLUGINS_DIR_HOST
 
 # IJ log directory
 IJ_LOG_DIR_HOST=${IJ_ROOT_DIR_HOST}/.cache/JetBrains/${IJ_ROOT_DIR_HOST}/log
 [ ! -d $IJ_LOG_DIR_HOST ] && mkdir -p $IJ_LOG_DIR_HOST
+
+# IJ User Preferences
+IJ_USER_PREFS_HOST=${IJ_ROOT_DIR_HOST}/.java/.userPrefs
+[ ! -d $IJ_USER_PREFS_HOST ] && mkdir -p $IJ_USER_PREFS_HOST
+
 
 ############################################
 # Create IJ directory paths within container
@@ -41,6 +46,8 @@ IJ_PLUGINS_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/.local/share/JetBrains/$IJ_ROOT_DIRNAME
 
 IJ_LOG_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/.cache/JetBrains/${IJ_ROOT_DIRNAME}/log
 
+IJ_USER_PREFS_CNTR=${IJ_ROOT_DIR_CNTR}/.java/.userPrefs
+
 #############################################################
 # If you want to share code with the container,
 # place your project directories under $IJ_PROJECTS_DIR_HOST
@@ -55,13 +62,12 @@ IJ_PROJECTS_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/IdeaProjects
 # to avoid re-downloading everything
 ###########################################################
 MAVEN_M2_DIR_HOST=~/.m2
-[ ! -d $ $MAVEN_M2_DIR_HOST ] && mkdir -p $MAVEN_M2_DIR_HOST
+[ ! -d $$MAVEN_M2_DIR_HOST ] && mkdir -p $MAVEN_M2_DIR_HOST
 
 MAVEN_M2_DIR_CNTR=~/.m2
 
-
 # Ensure host user has all persmissions correty set for access
-chmod 777 -R IJ_ROOT_DIR_HOST
+chmod 764 -R $IJ_ROOT_DIR_HOST
 
 #########################################################
 # Ensure the Xauthority file exists and allows permission
@@ -69,9 +75,6 @@ chmod 777 -R IJ_ROOT_DIR_HOST
 #########################################################
 xhost +
 
-
-# --user 1000:1000 \
-# -w ${HOME} \
 
 docker container run -d --rm -it                   \
 -e DISPLAY                                         \
@@ -84,6 +87,7 @@ docker container run -d --rm -it                   \
 -v ${IJ_LOG_DIR_HOST}:${IJ_LOG_DIR_CNTR}           \
 -v ${IJ_PROJECTS_DIR_HOST}:${IJ_PROJECTS_DIR_CNTR} \
 -v ${MAVEN_M2_DIR_HOST}:${MAVEN_M2_DIR_CNTR}       \
+-v ${IJ_USER_PREFS_HOST}:${IJ_USER_PREFS_CNTR}     \
 -h jetbrains                                       \
 --name  intelliJ-ce-ide-jdk11                      \
 ij:latest
