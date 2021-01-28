@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# First build a docker container that will create the host
+# machines's current $USER in the container in order for data
+# to be persistent when container is terminated
+docker  build --build-arg USER=$USER  -t mvpjava/intellij-ide:latest .
+
 # Create IntelliJ directories used as Docker bind mount volumes on host.
 # if they don't exist, then create them with current $USER permissions on host 
 # in order to have write permissions in container (or else root is used)
