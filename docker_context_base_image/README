@@ -4,8 +4,9 @@ but you can use another version and pass it using ..
 
 docker build --build-arg IJ_TARBALL=ideaIC-${YOUR_VERSION}.tar.gz -t ${YOUR_TAG} .
 
-to build your docker image.
-
+to build your docker image. Same goes for maven where I used  apache-maven-3.6.3-bin.tar.gz.
+I don't use http links to download artifacts anymore since links break all the time
+and then the image breaks and caching is a nightmare!
 
 Make sure you place the tarball in the same directory as the Dockerfile and build.sh
 if you choose to build the image yourself.
