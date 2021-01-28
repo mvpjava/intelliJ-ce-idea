@@ -23,10 +23,6 @@ IJ_CACHE_DIR_HOST=${IJ_ROOT_DIR_HOST}/.cache/JetBrains/
 IJ_PLUGINS_DIR_HOST=${IJ_ROOT_DIR_HOST}/.local/share/JetBrains/consentOptions
 [ ! -d $IJ_PLUGINS_DIR_HOST ] && mkdir -p $IJ_PLUGINS_DIR_HOST
 
-# IJ log directory
-IJ_LOG_DIR_HOST=${IJ_ROOT_DIR_HOST}/.cache/JetBrains/${IJ_ROOT_DIRNAME}/log
-[ ! -d $IJ_LOG_DIR_HOST ] && mkdir -p $IJ_LOG_DIR_HOST
-
 # IJ User Preferences
 IJ_USER_PREFS_HOST=${IJ_ROOT_DIR_HOST}/.java/.userPrefs
 [ ! -d $IJ_USER_PREFS_HOST ] && mkdir -p $IJ_USER_PREFS_HOST
@@ -43,8 +39,6 @@ IJ_SYNTAX_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/.config/JetBrains/$IJ_ROOT_DIRNAME
 IJ_CACHE_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/.cache/JetBrains/$IJ_ROOT_DIRNAME
 
 IJ_PLUGINS_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/.local/share/JetBrains/$IJ_ROOT_DIRNAME
-
-IJ_LOG_DIR_CNTR=${IJ_ROOT_DIR_CNTR}/.cache/JetBrains/${IJ_ROOT_DIRNAME}/log
 
 IJ_USER_PREFS_CNTR=${IJ_ROOT_DIR_CNTR}/.java/.userPrefs
 
@@ -70,8 +64,8 @@ MAVEN_M2_DIR_CNTR=~/.m2
 chmod 764 -R $IJ_ROOT_DIR_HOST
 
 #########################################################
-# Ensure the Xauthority file exists and allows permission
-# to connect for Docker to connect to X11 Server on host
+# Ensure Docker can connect to X11 Server on host.
+# Very permissive.
 #########################################################
 xhost +
 
@@ -83,10 +77,9 @@ docker container run -d --rm -it                   \
 -v ${IJ_ROOT_DIR_HOST}:${IJ_SYNTAX_DIR_CNTR}       \
 -v ${IJ_CACHE_DIR_HOST}:${IJ_CACHE_DIR_CNTR}       \
 -v ${IJ_PLUGINS_DIR_HOST}:${IJ_PLUGINS_DIR_CNTR}   \
--v ${IJ_LOG_DIR_HOST}:${IJ_LOG_DIR_CNTR}           \
 -v ${IJ_PROJECTS_DIR_HOST}:${IJ_PROJECTS_DIR_CNTR} \
 -v ${MAVEN_M2_DIR_HOST}:${MAVEN_M2_DIR_CNTR}       \
 -v ${IJ_USER_PREFS_HOST}:${IJ_USER_PREFS_CNTR}     \
 -h jetbrains                                       \
---name  intelliJ-ce-ide-jdk11                      \
-ij:latest
+--name  ij-ce-ide-jdk11                      \
+mvpjava/intellij-ide:latest

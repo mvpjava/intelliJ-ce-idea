@@ -44,8 +44,18 @@ RUN  cd ${IJ_INSTALL_DIR}   \
   && tar -xf  ${IJ_TARBALL} \
   && rm -f ${IJ_TARBALL}
 
+# This makes debconf use a frontend that expects no interactive input at all, 
+# preventing it from even trying to access stdin (this avoiding a big red error
+# message in console output)
+ENV  DEBIAN_FRONTEND=noninteractive
+
 # Switch to non-root user which gets created with sudo access
-ENV USER=andy
+# # The host machine $USER is used, past in via --build-arg 
+# in order to persist data across invocations of container.
+# Default user is "mvpjava" if ever no --build-arg is provided
+# however that won't persist the data on host machine after 
+# container is terminated
+ARG USER=mvpjava      
 ENV HOME=/home/${USER}
 ENV USER_ID=1000
 ENV GROUP_ID=1000
@@ -65,7 +75,6 @@ RUN apt-get install sudo -y && \
 ##########################################################################
 
 RUN mkdir -p ${HOME}/.config/JetBrains/IdeaIC2020.3 &&     \
-    mkdir -p ${HOME}/.cache/JetBrains/IdeaIC2020.3/log &&  \
     mkdir -p ${HOME}/.local/share/JetBrains/IdeaIC2020.3 &&   \
     mkdir -p ${HOME}/.local/share/JetBrains/consentOptions &&   \
     mkdir -p ${HOME}/.java/.userPrefs && \
