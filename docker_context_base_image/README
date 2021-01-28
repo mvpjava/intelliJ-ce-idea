@@ -1,0 +1,18 @@
+I Cannot upload the IntelliJ IDE tarball since it's too big.
+You have to download it yourself. I used version ideaIC-2020.3.1.tar.gz
+but you can use another version and pass it using ..
+
+docker build --build-arg IJ_TARBALL=ideaIC-${YOUR_VERSION}.tar.gz -t ${YOUR_TAG} .
+
+to build your docker image.
+
+
+Make sure you place the tarball in the same directory as the Dockerfile and build.sh
+if you choose to build the image yourself.
+
+Either way, the best way to get this image is from my DockerHub account at ..
+https://hub.docker.com/repository/docker/mvpjava/
+
+When you actually execute the run.sh script in the top level directory, it will
+fetch it for you.
+
