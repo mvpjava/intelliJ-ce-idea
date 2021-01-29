@@ -1,6 +1,7 @@
 # Docker for Your Java Developent Environment with IntelliJ
 
 This is here to support the Blog Post http://mvpjava.com/docker-java-development-environment-intellij
+and the You Tube Tutorial https://youtu.be/HUj1RbwYXVQ
 
 + Note: Only works if your running Docker on a Linux host/VM
 
